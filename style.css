@@ -1,0 +1,15 @@
+body {
+    background-color: #FFFFF2;
+    display: flex;
+    align-items: center;
+}
+
+#main{
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 100%;
+}
+h3{
+  
+}

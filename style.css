@@ -10,6 +10,19 @@ body {
   align-items: center;
   width: 100%;
 }
-h3{
-  
+#main p{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+#home-button{
+    display: flex;
+}
+#home-button .home{
+    font-size: 1.3em;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 2%;
+}
+#home-button .home:hover{
+    background-color: #ec971f;
 }

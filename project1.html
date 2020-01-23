@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cem Alemdar - CS420X</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div id="main">
+    <div id="home-button">
+        <button class="home" type="button" onclick="window.location.href='index.html'">Home</button>
+    </div>
+    <header>
+        <h1>Project 1 - Shader Live Coding</h1>
+    </header>
+
+    <br>
+    <p>
+        I started the animation with a vec3 color variable, and had a changing red value depending on (p.x / p.y),
+        where p is the pixel positions acquired using the uvN() function. I planned to change the RGB values of the color vector.
+        I added a float called "b" for changing the blue value, and added a step function to divide the screen into two
+        different halves. I then added a "g" variable to change the green value using a tan() function. Then I changed the
+        step function to split the screen in a diagonal to add a bit more complexity, and then changed (p.x/p.y) to a (p.x * p.y)
+        so the screen became a gradient of two alternating color pairs. Afterwards I created a for loop to add more functions
+        to the variables created earlier. I added a vec2 to the variable "p", and then applied a tan() function to the time variable
+        to add variability to the speed of movement. I then found a way to make the screen look noisy by increasing the frequency
+        variable, and then I divided the screen into three parts by subtracting another step function from variable "b", and then
+        found a way to get some interesting shapes by reducing the number of times the for loop runs for, and fixing the variable
+        "b" to a static value. Overall I had fun adding more functions and having an idea of how it will look, then seeing what
+        actually happens.
+    </p>
+
+    <br>
+    <p>
+        From my peer review I got compliments for the way I did my color variable and that it was a good idea to separate
+        the RGB colors. He also said he liked the way I used step to divide the canvas into separate parts. He also said
+        that I had good transition between different ideas. He criticized some of the failures I had trying to implement
+        certain functions like pow() and exp(), but overall he mathced the ideas I was trying to convey with what I was doing.
+    </p>
+    <br>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/nGYO-8guUak" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+</div>
+
+</body>
+</html>

@@ -26,3 +26,8 @@ body {
 #home-button .home:hover{
     background-color: #ec971f;
 }
+
+#main img{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}

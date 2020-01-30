@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <style>body{ margin:0 }</style>
+</head>
+<body>
+<canvas id='gl'></canvas>
+</body>
+<!-- vertex shader, as simple as possible -->
+<script id='vertex' type='x-shader/x-vertex'>
+    attribute vec2 a_position;
+
+    void main() {
+      gl_Position = vec4( a_position, 0., 1. );
+    }
+  </script>
+
+<!-- fragment shader -->
+<script id='fragment' type='x-shader/x-fragment'>
+    #ifdef GL_ES
+    precision mediump float;
+    #endif
+
+    uniform mediump float time;
+    uniform mediump vec2 resolution;
+
+
+    float parabola( float x, float k ){
+        return pow( 4.0*x*(1.0-x), k );
+    }
+
+    //  Function from Iñigo Quiles
+    //  www.iquilezles.org/www/articles/functions/functions.htm
+    float cubicPulse( float c, float w, float x ){
+        x = abs(x - c);
+        if( x>w ) return 0.0;
+        x /= w;
+        return 1.0 - x*x*(3.0-2.0*x);
+    }
+
+    vec2 lines( float x, float y, float frequency, vec2 st){
+
+        float pulseX = cubicPulse(x,0.2,st.x) * sin(time * frequency);
+        float pulseY = cubicPulse(y,0.2,st.y) * sin(time * frequency);
+
+        return vec2(pulseX, pulseY);
+    }
+
+    void main() {
+        vec2 st = gl_FragCoord.xy/ resolution;
+        float frequency = 0.1;
+
+        float y = step(0.5,st.x);
+        vec3 color = vec3(y);
+
+        float pulse1 = fract(st.y / (0.3 * sin(time * frequency)));
+        float pulse2 = fract(st.x / (0.3 * sin(time * frequency)));
+
+        //pulse1 += cubicPulse(st.x, st.y, parabola(0.4, (time * frequency)));
+        pulse2 += parabola(st.y, st.x);
+
+
+        color = vec3(pulse2, pulse2, pulse1);
+
+        gl_FragColor = vec4(color,1.0);
+    }
+  </script>
+
+
+<script type='text/javascript' src="example.js"></script>
+
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <style>body{ margin:0 }</style>
+</head>
+<body>
+<canvas id='gl'></canvas>
+</body>
+<!-- vertex shader, as simple as possible -->
+<script id='vertex' type='x-shader/x-vertex'>
+    attribute vec2 a_position;
+
+    void main() {
+      gl_Position = vec4( a_position, 0., 1. );
+    }
+  </script>
+
+<!-- fragment shader -->
+<script id='fragment' type='x-shader/x-fragment'>
+    #ifdef GL_ES
+    precision mediump float;
+    #endif
+
+    uniform float time;
+    uniform vec2 resolution;
+
+    // GLSL gives us this for free... our first sampler2D automatically
+    // points to our first bound texture.
+
+    uniform sampler2D uSampler;
+
+    vec4 blur5(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+        vec4 color = vec4(0.0);
+        vec2 off1 = vec2(1.3333333333333333) * direction;
+        color += texture2D(image, uv) * 0.29411764705882354;
+        color += texture2D(image, uv + (off1 / resolution)) * 0.35294117647058826;
+        color += texture2D(image, uv - (off1 / resolution)) * 0.35294117647058826;
+        return color;
+    }
+
+
+    void main() {
+        // texture2D lets us lookup a pixel in a texture by passing xy values from 0–1
+        // to get those normalized values we divide gl_FragCoord (measured in pixels) by our resolution
+
+        vec2 offset = 1. / resolution;
+        vec3 base = texture2D( uSampler, gl_FragCoord.xy / resolution ).rgb;
+        vec3 lowerLeft = texture2D( uSampler, gl_FragCoord.xy / resolution - offset ).rgb;
+        vec3 upperRight = texture2D( uSampler, gl_FragCoord.xy / resolution + offset).rgb;
+
+        gl_FragColor = blur5(uSampler, gl_FragCoord.xy / resolution, resolution, vec2(2.));
+    }
+  </script>
+
+
+<script type='text/javascript' src="example.js"></script>
+
+</html>

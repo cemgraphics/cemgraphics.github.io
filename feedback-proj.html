@@ -3,6 +3,9 @@
 <head>
     <style>body{ margin:0; background:black }</style>
     <script type="text/javascript" src="js/dat.gui.js"></script>
+    <script src="js/lib/webgl-utils.js"></script>
+    <script src="js/lib/initShaders.js"></script>
+    <script src="js/lib/MV.js"></script>
 </head>
 <body>
 <canvas id='gl'></canvas>
@@ -12,7 +15,7 @@
     attribute vec2 a_position;
 
     void main() {
-      gl_Position = vec4( a_position, 0, 1 );
+      gl_Position = vec4( a_position, 0., 1. );
     }
 </script>
 
@@ -41,6 +44,8 @@
   uniform vec2  resolution;
   uniform float uVideoValue;
   uniform vec3  uControl;
+  uniform float uRotation;
+  uniform float uDisplacement;
 
   // for our live video feed
   uniform sampler2D videoTexture;
@@ -49,8 +54,9 @@
 
   void main() {
     vec2 pos = gl_FragCoord.xy / resolution;
+    pos.x = pos.x + uDisplacement;
 
-    //pos += sin(time / 100.) + prior.xy;
+    float rotation = pos.x * sin(10. - uRotation) / pos.y;
 
     vec3 video = texture2D( videoTexture, pos ).rgb;
     vec3 prior = texture2D( feedbackTexture, pos ).rgb;
@@ -59,7 +65,7 @@
     // and our feedback
 
 
-    gl_FragColor = vec4( (video * uVideoValue + prior * feedbackAmount + (uControl * 0.04)), 1. );
+    gl_FragColor = vec4( (video * uVideoValue * rotation + prior * feedbackAmount + (uControl * 0.04)), 1. );
   }
 </script>
 
@@ -67,7 +73,9 @@
     // kinda global variables... upvalues to each closure of each function in this script tag
     let gl, uTime, uRes, drawProgram, videoTexture
     let feedbackProgram, uVideoTexture, uFeedbackTexture, uFeedback, textureBack, textureFront, textureLoaded,
-        video, gui, controlValues, uControl, uVideoValue
+        video, gui, controlValues, uControl, uVideoValue, uRotation, uDisplacement
+    let alpha = 0
+    let theta = 0
 
     const size = 768
     window.onload = function() {
@@ -144,7 +152,8 @@
             this.Red = 0.5;
             this.Green = 0.1;
             this.Blue = 0.8;
-            this.displayOutline = false;
+            this.rotation = 0.;
+            this.displacement = 0.;
             //this.explode = function() { ... };
             // Define render logic ...
         };
@@ -156,7 +165,8 @@
         gui.add(controlValues, 'Red', 0., 1.);
         gui.add(controlValues, 'Green', 0., 1.);
         gui.add(controlValues, 'Blue', 0., 1.);
-        gui.add(controlValues, 'displayOutline');
+        gui.add(controlValues, 'rotation', -1., 1.);
+        gui.add(controlValues, 'displacement', -1., 1.);
 
         // get position attribute location in shader
         var position = gl.getAttribLocation( drawProgram, 'a_position' )
@@ -187,6 +197,9 @@
 
         uFeedback = gl.getUniformLocation( feedbackProgram, 'feedbackAmount' )
         uControl = gl.getUniformLocation( feedbackProgram, 'uControl' )
+        uRotation = gl.getUniformLocation(feedbackProgram, "uRotation")
+        uDisplacement = gl.getUniformLocation(feedbackProgram, "uDisplacement")
+
 
         // find a pointer to the uniform "time" in our fragment shader
         uTime = gl.getUniformLocation( feedbackProgram, 'time' )
@@ -196,8 +209,6 @@
         // feedback shader in any given frame of video.
         uFeedbackTexture = gl.getUniformLocation( feedbackProgram, 'feedbackTexture' )
         uVideoTexture = gl.getUniformLocation( feedbackProgram, 'videoTexture' )
-
-
         uVideoValue = gl.getUniformLocation( feedbackProgram, 'uVideoValue' )
 
         position = gl.getAttribLocation( feedbackProgram, 'a_position' )
@@ -208,7 +219,7 @@
     }
 
     function getVideo() {
-        const video = document.createElement('video');
+        const video = document.createElement('video')
 
         // request video stream
         navigator.mediaDevices.getUserMedia({
@@ -232,7 +243,7 @@
 
         // since canvas draws from the top and shaders draw from the bottom, we
         // have to flip our canvas when using it as a shader.
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
 
         // how to map when texture element is more than one pixel
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR )
@@ -290,6 +301,12 @@
         gl.uniform3f( uControl, controlValues.Red, controlValues.Green, controlValues.Blue )
         gl.uniform1f( uVideoValue, controlValues.videoValue )
 
+        theta += controlValues.rotation
+        gl.uniform1f( uRotation, theta )
+        gl.uniform1f( uDisplacement, controlValues.displacement )
+
+
+
         gl.activeTexture( gl.TEXTURE0 )
         gl.bindTexture( gl.TEXTURE_2D, videoTexture )
         gl.uniform1i( uVideoTexture, 0 )
@@ -327,6 +344,7 @@
         // put simulation on screen
         gl.drawArrays( gl.TRIANGLES, 0, 6 )
     }
+
 </script>
 
 </html>

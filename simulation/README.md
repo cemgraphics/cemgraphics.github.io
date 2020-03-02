@@ -1,0 +1,52 @@
+# Fluid Simulation
+
+The original version of this fluid simulation is done by Amanda Ghassaei
+and can be found at: http://www.amandaghassaei.com/projects/shaders/
+
+In this project I wanted to create a fluid simulation that allows
+users to interact with a fluid by clicking and dragging on tha canvas.
+The simulation is composed of ten fragment shaders communicating to each 
+other through 2D textures.
+
+The first shader is a Boundary shader that decides how large the textures are
+going to be depending on the size of the canvas, which can be changed dynamically
+so a vec2 uniform stores the size of the canvas.
+
+The second shader is the AddMaterial shader that gets the mouse location, the length 
+of how much it was dragged, and a radius to give it a swirl to replicate fluidity.
+there are 4 different materials (different colors) and they have a gradual shift 
+between one material to the other.
+
+The next shader is the Advect shaders which decides how to mix colors together 
+depending on the velocity created by the clicking and dragging. Using a bilinear 
+interpolation function that looks at the pixels around it and pushes materials 
+to fuse them into each other, or pushes the color away by adding a new color to the mix.
+
+The shaders that handle a lot of the physics are the Force shader that takes in mouse 
+input and creates a velocity vector and add it to a texture to pass it to other shadres.
+The Divergence shader which decides how the force diverges through the texture using a finite 
+difference formula. The Jacobi shader that solves diagonal pressure caused by the velocity 
+texture. And finally the MoveParticle shader that decides which material should move in which direction.
+
+Finally all the shaders create a material texture and pass it to the Render shader that sets the 
+initial states, supplies all the materials, and renders the moved materials depending on the texture
+location.
+
+The features I have changed from the initial simulation are the force shader, so every 
+slight movement adds a push to what is in front of the cursor instead of creating one 
+forward wave. I changed all of the colors, the background and the material colors and 
+added a new material. I made it so that holding down the mouse button creates a spiral. 
+I increased the wave radius to make larger shapes. I have also increased the speed at 
+which the materials dissipate so it is more apparent. 
+I have also spent many hours making the entire simulation work using glslify and pure webgl 
+because the simulation uses a library for creating shaders, uniforms, and textures using webgl 
+and I was able to debug everything, but could not figure out one texture issue using uniforms.
+so I ended up using the graphics library.
+
+For feedback I got compliments for my color palette of purple, indigo, and green. He really 
+liked doing forward and backward movements to see the circular shapes. He also liked moving 
+the mouse in circular motion while holding it down to create a chaotic mixture of colors. 
+He also commented that he liked that the colors dissipate visibly, but he did not like the 
+background color I picked. He really enjoyed creating a chaotic arrangement of colors. 
+
+

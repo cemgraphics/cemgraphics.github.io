@@ -1,0 +1,18 @@
+{
+  "name": "fluid-simulation",
+  "version": "1.0.0",
+  "description": "Simulation for a class",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx browserify -t glslify main.js -o bundle.js",
+    "start": "npx budo main.js:bundle.js --live -- bundle.js -t glslify"
+  },
+  "author": "Cem Alemdar",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^16.5.0",
+    "budo": "^11.6.3",
+    "glslify": "^7.0.0"
+  }
+}

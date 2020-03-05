@@ -230,6 +230,10 @@
 
                 midiInput = WebMidi.getInputByName("Axiom A.I.R. Mini32 MIDI");
 
+                if(!midiInput){
+                    midiInput = WebMidi.inputs[0];
+                }
+
                 /*
                 let controls = function() {
                     this.f = 0.0452;

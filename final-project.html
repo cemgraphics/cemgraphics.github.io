@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cem Alemdar - CS420X</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div id="main">
+    <div id="home-button">
+        <button class="home" type="button" onclick="window.location.href='index.html'">Home</button>
+    </div>
+    <header>
+        <h1>Final Project - MIDI Controlled Shader</h1>
+    </header>
+
+    <a href="./webMIDI/midiShader.html">Click here to see the simulation</a>
+    <br>
+    <p>
+        For my final project I wanted to use a MIDI controller to control uniform values in a simulation. I decided to use
+        build on top of my reaction diffusion project. I wanted to control the flow and colors of the different fluids
+        in the reaction. I decided that using the control knobs on the MIDI controller would allow me to adjust values
+        to find sweet spots where the reaction looked pretty.
+    </p>
+
+    <br>
+    <p>
+        I had a pulsing effect applied to my reaction diffusion to keep the simulation going without an end. I realized that changing
+        the dA and dB values ever so slightly would result in the simulation dying. So I attached a random number generator to every
+        MIDI key so that hitting a key would change the diffusion coefficients of the fluids in the system.
+    </p>
+    <br>
+    <p>
+        I found out that changing the frequency variable created really cool effects in the simulation mainly because of the pulsing
+        I had the pulsing effect by creating a new k value pulsing using a sin function and adjusting the frequency variable adjust
+        the pulsing frequency, and a displacement variable to move the pulsing effect outward faster.
+    </p>
+    <br>
+    <p>
+        For feedback they told me they really liked being able to easily control the color, and ability to change the simulation in real time.
+        They told me that the control knobs were a good interface between human input, and visual stimulation. They found a few bugs that would
+        kill the simulation, or one bug where the entire shader would go black because I was dividing a value by 0. Overall they spent a good
+        15 minutes playing with the simulation which was a nice experience to watch.
+    </p>
+    <br>
+
+</div>
+
+</body>
+</html>
